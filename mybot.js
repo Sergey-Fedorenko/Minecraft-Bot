@@ -4,7 +4,7 @@ const mineflayerViewer = require('prismarine-viewer').mineflayer
 // Подключение бота к серверу
 const bot = mineflayer.createBot({
     host: "localhost",
-    port: "11728",
+    port: "13879",
     version: "1.18.2",
     username: "MyBot" })
 
@@ -20,6 +20,7 @@ const bot = mineflayer.createBot({
           if (message === "Ты бот?" && username === "Sergey") {
               setTimeout(() => bot.chat(username + " , нет я не бот"), 5000);
           } else {
+              if(message !== "Ты бот?") return;
               setTimeout(() => bot.chat(username + " , я тебя не знаю"), 5000);
           }
     });
@@ -31,6 +32,8 @@ const bot = mineflayer.createBot({
             firstPerson:true,
             viewDistance: "25"})
     })
+
+
 
 
 
