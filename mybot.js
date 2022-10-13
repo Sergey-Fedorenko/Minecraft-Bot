@@ -1,12 +1,15 @@
 const mineflayer = require("mineflayer")
 const mineflayerViewer = require('prismarine-viewer').mineflayer
+const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder')
+const autoeat = require('mineflayer-auto-eat')
 
 // Подключение бота к серверу
 const bot = mineflayer.createBot({
     host: "localhost",
-    port: "5209",
+    port: "31278",
     version: "1.18.2",
     username: "MyBot" })
+
 
 //---------------------------------------------------------------------
     // Вывод сообщения в чат при входе на сервер
@@ -88,5 +91,20 @@ const bot = mineflayer.createBot({
     }
 //---------------------------------------------------------------------
 
+    //По команде скидывает предметы из инвентаря
+    bot.on('chat',function (username,message){
+        if(username === "MyBot") return;
+        if (message === "Drop" && username === "Sergey"){
+            function tossNext(){
+                if(bot.inventory.items().length === 0) {
+                    console.log("У меня пусто")
+                } else {
+                    const item = bot.inventory.items()[0]
+                    bot.tossStack(item,tossNext)
+                }
+            }
+            tossNext()
+        }
+    });
 
 
