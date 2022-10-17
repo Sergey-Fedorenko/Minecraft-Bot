@@ -1,12 +1,12 @@
 const mineflayer = require("mineflayer")
 const mineflayerViewer = require('prismarine-viewer').mineflayer
 const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder')
-const autoeat = require('mineflayer-auto-eat')
+
 
 // Подключение бота к серверу
 const bot = mineflayer.createBot({
     host: "localhost",
-    port: "31278",
+    port: "4201",
     version: "1.18.2",
     username: "MyBot" })
 
@@ -106,5 +106,21 @@ const bot = mineflayer.createBot({
             tossNext()
         }
     });
+//---------------------------------------------------------------------
+    // Авто-кликер
+    bot.on('spawn', function (){
+        bot.loadPlugin(require("mineflayer-autoclicker"))
+        bot.autoclicker.start() // Автоматический запуск авто-кликера, когда бот заходит на сервер (необязательно)
+    })
 
+    bot.on('chat', function (usrername, message){
+        if(message === "Start") {
+            bot.autoclicker.start()
+        }
+
+        if(message === "Stop") {
+            bot.autoclicker.stop()
+        }
+    });
+//---------------------------------------------------------------------
 
