@@ -148,7 +148,8 @@ const bot = mineflayer.createBot({
  }
 });
 //---------------------------------------------------------------------
-// Считаем значения Здоровья и Еды
+
+// Считаем значения Здоровья и Еды /
 bot.on('chat', function (username,message){
     if(message === "Здоровье"){
         bot.chat('У меня ' + bot.health.toFixed(0) + ' здоровье')
