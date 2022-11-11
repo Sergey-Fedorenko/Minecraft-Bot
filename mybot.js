@@ -141,7 +141,7 @@ const bot = mineflayer.createBot({
 
             /* if(!empty_bucket) {
                 console.log('[Предупреждение] В моем инвентаре нет пустого ведра');
-                return startMilking(); */ // По желанию вывовод в консоль
+                return startMilking(); */ // По желанию вывод в консоль
 
              await startMilking();
    }, 2000)
