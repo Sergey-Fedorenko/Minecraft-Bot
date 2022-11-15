@@ -1,12 +1,13 @@
 const mineflayer = require("mineflayer")
 const mineflayerViewer = require('prismarine-viewer').mineflayer
 const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder')
+const {autototem} = require("mineflayer-auto-totem");
 
 
 // Подключение бота к серверу
 const bot = mineflayer.createBot({
     host: "localhost",
-    port: "20225",
+    port: "5131",
     version: "1.18.2",
     username: "MyBot" });
 
@@ -123,33 +124,31 @@ const bot = mineflayer.createBot({
         }
     });
 //---------------------------------------------------------------------
-
-// Взаимодействие с коровами
- bot.on('spawn', async function() {
-     await startMilking()
-     async function startMilking() {
-         setTimeout(async function() {
-
-             let nearbyCows = Object.values(bot.entities).filter(e => e.name == 'cow' && e.position.distanceTo(bot.entity.position) < 5
-               && !e.metadata[16]);
-
-             let cow = nearbyCows[Math.floor(Math.random() * nearbyCows.length)];
-
-            await bot.lookAt(cow.position, false)
-
-             let empty_bucket = bot.inventory.items().filter(item => item.name == 'bucket')[0];
-
-            /* if(!empty_bucket) {
-                console.log('[Предупреждение] В моем инвентаре нет пустого ведра');
-                return startMilking(); */ // По желанию вывод в консоль
-
-             await startMilking();
-   }, 2000)
- }
-});
+    // Взаимодействие с коровами
+//  bot.on('spawn', async function() {
+//      await startMilking()
+//      async function startMilking() {
+//          setTimeout(async function() {
+//
+//              let nearbyCows = Object.values(bot.entities).filter(e => e.name == 'cow' && e.position.distanceTo(bot.entity.position) < 5
+//                && !e.metadata[16]);
+//
+//              let cow = nearbyCows[Math.floor(Math.random() * nearbyCows.length)];
+//
+//             await bot.lookAt(cow.position, false)
+//
+//              let empty_bucket = bot.inventory.items().filter(item => item.name == 'bucket')[0];
+//
+//             /* if(!empty_bucket) {
+//                 console.log('[Предупреждение] В моем инвентаре нет пустого ведра');
+//                 return startMilking(); */ // По желанию вывод в консоль
+//
+//              await startMilking();
+//    }, 2000)
+//  }
+// });
 //---------------------------------------------------------------------
-
-// Считаем значения Здоровья и Еды /
+    // Считаем значения Здоровья и Еды
 bot.on('chat', function (username,message){
     if(message === "Здоровье"){
         bot.chat('У меня ' + bot.health.toFixed(0) + ' здоровье')
@@ -158,3 +157,9 @@ bot.on('chat', function (username,message){
         bot.chat('У меня ' + bot.food + ' еды')
     }
 })
+//------------------------------------------------
+    //Автоматическая экипировка тотемов
+    bot.loadPlugin(autototem)
+    bot.on("physicsTick", async() =>{
+        bot.autototem.equip()
+    })
