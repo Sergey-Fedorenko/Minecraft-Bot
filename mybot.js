@@ -1,15 +1,19 @@
 const mineflayer = require("mineflayer")
 const mineflayerViewer = require('prismarine-viewer').mineflayer
-const { pathfinder, Movements, goals: { GoalNear } } = require('mineflayer-pathfinder')
 const {autototem} = require("mineflayer-auto-totem");
+const {BossBar} = require("mineflayer");
+const options = require("options");
+const pathfinder = require('mineflayer-pathfinder').pathfinder
+
 
 
 // Подключение бота к серверу
 const bot = mineflayer.createBot({
     host: "localhost",
-    port: "5131",
+    port: "3789",
     version: "1.18.2",
     username: "MyBot" });
+
 
 
 //---------------------------------------------------------------------
@@ -154,12 +158,65 @@ bot.on('chat', function (username,message){
         bot.chat('У меня ' + bot.health.toFixed(0) + ' здоровье')
     }
     if(message === "Еда"){
-        bot.chat('У меня ' + bot.food + ' еды')
+        bot.chat(`У меня ` + bot.food + ` еды`)
     }
-})
+    if(message === "Опыт"){
+        bot.chat("У меня " + bot.experience.points.toFixed(0) + " опыта" )
+    }
+    if(message === "Уровень"){
+         bot.chat('У меня ' + bot.experience.level.toFixed(0) + ' уровень')
+    }
+});
 //------------------------------------------------
     //Автоматическая экипировка тотемов
     bot.loadPlugin(autototem)
     bot.on("physicsTick", async() =>{
         bot.autototem.equip()
     })
+
+
+//------------------------------------------------
+    //Поиск пути в игроку
+
+// let coming = false
+// bot.loadPlugin(pathfinder)
+//
+// bot.once('spawn', () => {
+//     const mcData = require('minecraft-data')(bot.version)
+//     const defaultMove = new Movements(bot, mcData)
+//     bot.pathfinder.setMovements(defaultMove)
+//
+//     bot.on('chat', (username, message) => {
+//         const args = message.split(' ')
+//         switch (args[0]) {
+//             case 'come':
+//                 coming = true
+//                 const target = bot.players[username]?.entity
+//                 if (!target) {
+//                     bot.chat(username + " я тебя не вижу")
+//                     return
+//                 }
+//                 const {x: playerX, y: playerY, z: playerZ} = target.position
+//                 bot.pathfinder.setGoal(new GoalNear(playerX, playerY, playerZ, 1))
+//                 return
+
+//         }
+//     });
+// });
+// bot.on('goal_reached', () => {
+//     if (!coming) part()
+//     if (coming) coming = false
+// });
+
+    //Автоматическая экипировка брони
+    const armorManager = require('mineflayer-armor-manager')
+    bot.loadPlugin(armorManager)
+
+    // Web-радар
+    const radarPlugin = require('mineflayer-radar')(mineflayer);
+    radarPlugin(bot, options);
+
+
+    //web-инвентарь
+    const inventoryViewer = require('mineflayer-web-inventory')
+    inventoryViewer(bot)

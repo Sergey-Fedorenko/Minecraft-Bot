@@ -1,0 +1,3 @@
+[submodule "minecraft-assets"]
+	path = minecraft-assets
+	url = https://github.com/PrismarineJS/minecraft-assets.git
